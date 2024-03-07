@@ -1,6 +1,7 @@
 import socket
 import time
 import struct
+import numpy as np
 
 from dh_logger import logger
 
@@ -20,12 +21,12 @@ class DHFlagState:
     SET = 1
 
 
-default_dh_timeout = 0.2
+default_dh_timeout = 50.0
 default_dh_port_ctrl = 2333
 default_dh_port_comm = 2334
 default_dh_port_pt = 10000
 default_dh_port_debug = 8888
-default_dh_network = "192.168.137.255"
+default_dh_network = "192.168.137.19"
 
 dh_timeout = 0
 dh_port_ctrl = 0
@@ -47,6 +48,20 @@ s.settimeout(dh_timeout)
 s.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
 
 logger.print_trace("DH start listening for broadcast...")
+
+def string2float(val):
+    ret_list = []
+    str_data = str(val)
+    str_data = str_data[2:]
+    while True:
+        index = str_data.find('*')
+        if index != -1:
+            ele = float(str_data[:index])
+            ret_list.append(float(ele))
+            str_data = str_data[index+1:]
+        else:
+            return ret_list
+        
 
 def lookup():
     lookup_msg = "Is DH?"
@@ -172,28 +187,81 @@ def comm_get_cnt(isALl):
 def calibration():
     tx_messages = struct.pack('>BB', 0x01, 0x01)
     s.sendto(tx_messages, (dh_network, dh_port_comm))
-    
+    try:
+        data, address = s.recvfrom(1024)
+        logger.print_trace("Received from {}:{}".format(address, data.decode('utf-8')))
+        
+    except socket.timeout:  # fail after 1 second of no activity
+        logger.print_trace_error(dh_network + " : Didn't receive anymore data! [Timeout]")
+    except:
+        logger.print_trace_warning(dh_network + " fi_dh.get_root() except")
+
 
 def get_fdb():
     tx_messages = struct.pack('>BB', 0x01, 0x03)
     s.sendto(tx_messages, (dh_network, dh_port_comm))
     
     try:
-        data, address = s.recvfrom(1024)
-        # cnt1, angle1, angular_speed1, current1, status1, errorcode1, control_type, p1, i1, d1, angle_limited1, angular_speed_limited1, current_limited1 = struct.unpack('>lfffuuuffffff', data[0:32 + 4 + 4 + 4 + 1 + 1 + 1 + 4 + 4 + 4 + 4 + 4 + 4])
-        # cnt2, angle2, angular_speed2, current2, status2, errorcode2, control_type, p2, i2, d2, angle_limited2, angular_speed_limited2, current_limited2 = struct.unpack('>lfffuuuffffff', data[0:32 + 4 + 4 + 4 + 1 + 1 + 1 + 4 + 4 + 4 + 4 + 4 + 4])
-        # cnt3, angle3, angular_speed3, current3, status3, errorcode3, control_type, p3, i3, d3, angle_limited3, angular_speed_limited3, current_limited3 = struct.unpack('>lfffuuuffffff', data[0:32 + 4 + 4 + 4 + 1 + 1 + 1 + 4 + 4 + 4 + 4 + 4 + 4])
-        # cnt4, angle4, angular_speed4, current4, status4, errorcode4, control_type, p4, i4, d4, angle_limited4, angular_speed_limited4, current_limited4 = struct.unpack('>lfffuuuffffff', data[0:32 + 4 + 4 + 4 + 1 + 1 + 1 + 4 + 4 + 4 + 4 + 4 + 4])
-        # cnt5, angle5, angular_speed5, current5, status5, errorcode5, control_type, p5, i5, d5, angle_limited5, angular_speed_limited5, current_limited5 = struct.unpack('>lfffuuuffffff', data[0:32 + 4 + 4 + 4 + 1 + 1 + 1 + 4 + 4 + 4 + 4 + 4 + 4])
-        # cnt6, angle6, angular_speed6, current6, status6, errorcode6, control_type, p6, i6, d6, angle_limited6, angular_speed_limited6, current_limited6 = struct.unpack('>lfffuuuffffff', data[0:32 + 4 + 4 + 4 + 1 + 1 + 1 + 4 + 4 + 4 + 4 + 4 + 4])
-        angle_2 = struct.unpack('<f', data[0:4])
-        logger.print_trace("{}".format(angle_2))  
+        data, address = s.recvfrom(2048)
+        data_list = string2float(data)
+        arr = np.array(data_list)
+        split_arr = np.reshape(arr, (6, 4))
+        split_list = split_arr.tolist()
+        split_list[4][0] = -split_list[4][0]
+        split_list[5][0] = -split_list[5][0]
+        return split_list
     except socket.timeout:  # fail after 1 second of no activity
         logger.print_trace_error(dh_network + " : Didn't receive anymore data! [Timeout]")
     except:
         logger.print_trace_warning(dh_network + " fi_dh.get_root() except")
 
+
 def loop_angle(target1, target2, target3, target4, target5, target6):
-    tx_messages = struct.pack('>BBBBffffff', 0x01, 0x02, 0x00, 0x00, target1, target2, target3, target4, target5, target6)
+    tx_messages = struct.pack('>BBBBffffffffffffffffffffffff', 0x01, 0x02, 0x00, 0x00, target1[0], target1[1], target1[2], target1[3], target2[0], target2[1], target2[2], target2[3], target3[0], target3[1], target3[2], target3[3], target4[0], target4[1], target4[2], target4[3], target5[0], target5[1], target5[2], target5[3], target6[0], target6[1], target6[2], target6[3])
     s.sendto(tx_messages, (dh_network, dh_port_comm))
-    
+
+
+def test_report():
+    s.sendto(bytes("test", 'utf-8'), (dh_network, dh_port_comm))
+    try:
+        data, address = s.recvfrom(2048)
+
+        logger.print_trace("Received from {}:{}".format(address, data.decode('utf-8')))
+        strdata = str(data)
+        print(strdata)
+        # index = strdata.find('a')
+        # print(float(data[0:index-2]))
+        # substr = strdata[index+1: ]
+        # print(substr)
+        # index = substr.find('a')
+        # print(index)
+        # if index == -1:
+        #     print(substr[index+1:len(substr)])
+        #     print(int(substr[index+1:len(substr)-1]))
+        # for i in range(0, len(data)):
+        #     if str(data[i]) == 'a':
+        #         print(int(str(data[0:i-1])))
+        #         break
+        #     print(str(data[i]))
+        
+    except socket.timeout:  # fail after 1 second of no activity
+        logger.print_trace_error(dh_network + " : Didn't receive anymore data! [Timeout]")
+    except:
+        logger.print_trace_warning(dh_network + " fi_dh.get_root() except")
+
+
+def get_angle_limited():
+
+    tx_messages = struct.pack('>BB', 0x01, 0x04)
+    s.sendto(tx_messages, (dh_network, dh_port_comm))
+    try:
+        data, address = s.recvfrom(2048)
+        float_arr = string2float(data)  
+        float_arr[4] = -float_arr[4]          
+        float_arr[5] = -float_arr[5] 
+        return float_arr         
+        
+    except socket.timeout:  # fail after 1 second of no activity
+        logger.print_trace_error(dh_network + " : Didn't receive anymore data! [Timeout]")
+    except:
+        logger.print_trace_warning(dh_network + " fi_dh.get_root() except")
