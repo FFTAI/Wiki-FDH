@@ -8,10 +8,10 @@ from dh_logger import logger
 def main():
 
  
-    open_hand = 1
-    pwm = -3000 * open_hand
+    open_hand = -1
+    pwm = 3800 * open_hand
     dh.debug_motor_set_pwm(1, pwm)
-    time.sleep(2)
+    time.sleep(5)
     dh.debug_motor_stop(0)
    
 

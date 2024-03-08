@@ -8,7 +8,7 @@ def main():
     pwm = 2500 * int(forward)
     dh.debug_motor_set_pwm(0, pwm)
     # dh.debug_motor_set_pwm(6, pwm)
-    time.sleep(2)
+    time.sleep(1)
     dh.debug_motor_stop(0)
 
 if __name__ == '__main__':

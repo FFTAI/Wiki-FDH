@@ -2,7 +2,7 @@ import dh
 from dh_logger import logger
 
 def main():
-    pass
+    dh.get_angulat_speed()
 
 if __name__ == '__main__':
     main()

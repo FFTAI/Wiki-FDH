@@ -6,15 +6,27 @@ def main():
     target_angle = [0, 0, 0, 0, 0, 0]
     data_limit = []
     data_fdb = []
+    
+    finger1 = [ 0,   450.0,  0.6,  0.3]     # 1  -800~0
+    finger2 = [ 0,   450.0,  0.6,  0.3]     #1 2   0~1100
+    finger3 = [ 0,   450.0,  0.6,  0.3]     # 3  0~1100  
+    finger4 = [ 0,   450.0,  0.6,  0.3]     # 4  0~1000 error
+    finger5 = [ 0,   450.0,  0.6,  0.3]     # 5 errror
+    finger6 = [ 0,   450.0,  0.6,  0.3]     # 6
+    hand = [finger1, finger2, finger3, finger4, finger5, finger6]
+
     logger.print_trace("id取值-> calibration:0, get jont limit:-1, get fdb: -2, 1,2,3,4,5,6操作关节id, set 6 target: 7")
     logger.print_trace("action id: reset: 20 OK: 21")
     while True:
+        angle = dh.get_angle()
+        for ele in angle:
+            print(ele)
         id = input("id : ")
         if int(id) == 0:
             dh.calibration()
             continue
         if int(id) == -1:
-            data_limit = dh.get_angle_limited()
+            data_limit = dh.get_angular_range()
             for ele in data_limit:
                 logger.print_trace("finger limit: {}".format(ele))
             continue
@@ -35,58 +47,85 @@ def main():
         
         if id_int == 7:
             for i in range(0, 6):
-                target_angle[i] = input("id: {}, target: ".format(i))
+                set_target = input("id: {}, target: ".format(i))
+                hand[i][0] = int(set_target)
         elif id_int == 1 or id_int == 2 or id_int == 3 or id_int == 4 or id_int == 5 or id_int == 6:
-            target_angle[int(id) -1] = int(input("id: {}, input target is: ".format(id)))
+            set_target = int(input("id: {}, input target is: ".format(id)))
+            hand[int(id)-1][0] = int(set_target)
         elif id_int == 21:
-            target_angle = [-500, 150, 500, 990, 800, 350]
+            hand[0][0] = -350
+            hand[1][0] = 150
+            hand[2][0] = 500
+            hand[3][0] = 800
+            hand[4][0] = 850
+            hand[5][0] = 350
+
+        elif id_int == 22:
+            hand[0][0] = -900
+            hand[1][0] = 1100
+            hand[2][0] = 1100
+            hand[3][0] = 0
+            hand[4][0] = 1100
+            hand[5][0] = 1100
+
+        elif id_int == 23:
+            hand[0][0] = -0
+            hand[1][0] = 1100
+            hand[2][0] = 0
+            hand[3][0] = 0
+            hand[4][0] = 0
+            hand[5][0] = 1100
+
+        elif id_int == 24:
+            hand[0][0] = -0
+            hand[1][0] = 1100
+            hand[2][0] = 1100
+            hand[3][0] = 900
+            hand[4][0] = 990
+            hand[5][0] = 1100
+
+        elif id_int == 25:
+            while (id_int - 10) > 0:
+                hand[0][0] = -0
+                hand[1][0] = 0
+                hand[2][0] = 500
+                hand[3][0] = 0
+                hand[4][0] = 500
+                hand[5][0] = 0
+                dh.loop_angle(hand[0], hand[1], hand[2], hand[3], hand[4], hand[5], angle)
+                time.sleep(0.5)
+                hand[0][0] = -500
+                hand[1][0] = 0
+                hand[2][0] = 0
+                hand[3][0] = 500
+                hand[4][0] = 0
+                hand[5][0] = 500
+                dh.loop_angle(hand[0], hand[1], hand[2], hand[3], hand[4], hand[5], angle)
+                id_int = id_int -1
+            continue
+
         elif id_int == 20:
-            target_angle = [-0, 0, 0, 0, 0, 0]
+            hand[0][0] = -0
+            hand[1][0] = 0
+            hand[2][0] = 0
+            hand[3][0] = 0
+            hand[4][0] = 0
+            hand[5][0] = 0
+
+        elif id_int == 999:
+            hand[0][0] = -0
+            hand[1][0] = 1100
+            hand[2][0] = 0
+            hand[3][0] = 900
+            hand[4][0] = 990
+            hand[5][0] = 1100
+
         else:
             logger.print_trace("id error")
-
-        finger1 = [ target_angle[0],   100.1,  0.4,  0.01]     # 1  -800~0
-        finger2 = [ target_angle[1],   200.1,  0.61,  0.01]     #1 2   0~1100
-        finger3 = [ target_angle[2],   100.1,  0.0,  0.00]     # 3  0~1100  
-        finger4 = [ target_angle[3],   100.1,  0.51,  0.001]     # 4  0~1000 error
-        finger5 = [ target_angle[4],   100.1,  0.00,  0.00]     # 5 errror
-        finger6 = [ target_angle[5],   100.1,  0.0,  0.00]     # 6
-        dh.loop_angle(finger1, finger2, finger3, finger4, finger5, finger6)
+        
+        dh.loop_angle(hand[0], hand[1], hand[2], hand[3], hand[4], hand[5], angle)
         # target_angle = [0, 0, 0, 0, 0, 0]
-    # 1 6 4 2 3 5
-    # time.sleep(2)
-
-    #           angle, p,  i,    d
-    # finger1 = [ -700,   20.1,  0.81,  0.021]     # 1  -800~0
-    # finger2 = [ 1100,   10.1,  0.51,  0.081]     # 2   0~1100
-    # finger3 = [ 1200,   10.1,  0.81,  0.001]     # 3  0~1100
-    # finger4 = [ 0,   10.1,  0.51,  0.001]     # 4  0~1000
-    # finger5 = [ -1100,   10.1,  0.51,  0.001]    # 5 -1100~0 
-    # finger6 = [ -1100,   10.1,  0.51,  0.001]     # 6 -1100~0    
     
-    # dh.loop_angle(finger1, finger2, finger3, finger4, finger5, finger6)
-    # # 1 6 4 2 3 5
-    # time.sleep(2)
-
-    # finger1 = [ -700,   20.1,  0.81,  0.021]     # 1  -800~0
-    # finger2 = [ 1100,   10.1,  0.51,  0.081]     # 2   0~1100
-    # finger3 = [ 1200,   10.1,  0.81,  0.001]     # 3  0~1100
-    # finger4 = [ 1000,   10.1,  0.51,  0.001]     # 4  0~1000
-    # finger5 = [ -1100,   10.1,  0.51,  0.001]    # 5 -1100~0 
-    # finger6 = [ -1100,   10.1,  0.51,  0.001]     # 6 -1100~0
-
-    # dh.loop_angle(finger1, finger2, finger3, finger4, finger5, finger6)
-
-    # time.sleep(2)
-
-    # finger1 = [ -0,   20.1,  0.81,  0.021]     # 1  -800~0
-    # finger2 = [ 1100,   10.1,  0.51,  0.081]     # 2   0~1100
-    # finger3 = [ 1200,   10.1,  0.81,  0.001]     # 3  0~1100
-    # finger4 = [ 1000,   10.1,  0.51,  0.001]     # 4  0~1000
-    # finger5 = [ -1100,   10.1,  0.51,  0.001]    # 5 -1100~0 
-    # finger6 = [ -1100,   10.1,  0.51,  0.001]     # 6 -1100~0
-
-    # dh.loop_angle(finger1, finger2, finger3, finger4, finger5, finger6)
 
 if __name__ == '__main__':
     main()

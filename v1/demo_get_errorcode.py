@@ -2,7 +2,9 @@ import dh
 from dh_logger import logger
 
 def main():
-    pass
+    data = dh.get_errorcode()
+    for ele in data:
+        print(ele)
 
 if __name__ == '__main__':
     main()

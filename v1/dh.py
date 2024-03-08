@@ -21,7 +21,7 @@ class DHFlagState:
     SET = 1
 
 
-default_dh_timeout = 50.0
+default_dh_timeout = 10.0
 default_dh_port_ctrl = 2333
 default_dh_port_comm = 2334
 default_dh_port_pt = 10000
@@ -47,6 +47,13 @@ s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 s.settimeout(dh_timeout)
 s.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
 
+# config 2333 port , recvfrom active report message
+recv_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+recv_socket.settimeout(dh_timeout)
+server_address = ('192.168.137.1', 8888)  
+recv_socket.bind(server_address)  
+recv_socket_buff = []
+
 logger.print_trace("DH start listening for broadcast...")
 
 def string2float(val):
@@ -61,6 +68,40 @@ def string2float(val):
             str_data = str_data[index+1:]
         else:
             return ret_list
+        
+
+def get_angle_limited():
+
+    tx_messages = struct.pack('>B', 0x11)
+    s.sendto(tx_messages, (dh_network, dh_port_ctrl))
+    try:
+        data, address = s.recvfrom(1024)
+        float_arr = string2float(data)  
+        float_arr[4] = -float_arr[4]          
+        float_arr[5] = -float_arr[5] 
+        return float_arr         
+        
+    except socket.timeout:  # fail after 1 second of no activity
+        logger.print_trace_error(dh_network + " : Didn't receive anymore data! [Timeout]")
+    except:
+        logger.print_trace_warning(dh_network + " fi_dh.get_root() except")
+
+
+def get_angular_range():
+
+    tx_messages = struct.pack('>BB', 0x01, 0x04)
+    s.sendto(tx_messages, (dh_network, dh_port_comm))
+    try:
+        data, address = s.recvfrom(2048)
+        float_arr = string2float(data)  
+        float_arr[4] = -float_arr[4]          
+        float_arr[5] = -float_arr[5] 
+        return float_arr         
+        
+    except socket.timeout:  # fail after 1 second of no activity
+        logger.print_trace_error(dh_network + " : Didn't receive anymore data! [Timeout]")
+    except:
+        logger.print_trace_warning(dh_network + " fi_dh.get_root() except")
         
 
 def lookup():
@@ -114,24 +155,55 @@ def debug_motor_set_pwm(id, pwmval):
     except:
         logger.print_trace_warning(dh_network + " fi_dh.get_root() except")
 
-def get_angle(id):
-    tx_messages = struct.pack('>BBBB', 0x03, 0x02, 0x01, id)
-    s.sendto(tx_messages, (dh_network, dh_port_comm))
+def get_angle():
+    tx_messages = struct.pack('>B', 0x02)
+    s.sendto(tx_messages, (dh_network, dh_port_ctrl))
     try:
         data, address = s.recvfrom(1024)
-        logger.print_trace("Received from {}:{}".format(address, data))
-        if id == 0:
-            angle1, angle2, angle3, angle4, angle5, angle6 = struct.unpack('>ffffff', data[0:4 + 4 + 4 + 4 + 4 + 4])
-            # print(ip)
-            return angle1, angle2, angle3, angle4, angle5, angle6
-        else:
-            angel = struct.unpack('>f', data[0:4])
-            return angel
+        logger.print_trace("Received from {}:{}".format(address, data.decode("utf-8")))
+        data_list = string2float(data)
+        data_list[4] = -data_list[4]
+        data_list[5] = -data_list[5]
+        return data_list
 
     except socket.timeout:  # fail after 1 second of no activity
         logger.print_trace_error(dh_network + " : Didn't receive anymore data! [Timeout]")
     except:
         logger.print_trace_warning(dh_network + " fi_dh.get_root() except")
+
+def get_angulat_speed():
+    tx_messages = struct.pack('>B', 0x03)
+    s.sendto(tx_messages, (dh_network, dh_port_ctrl))
+    try:
+        data, address = s.recvfrom(1024)
+        logger.print_trace("Received from {}:{}".format(address, data.decode("utf-8")))
+        data_list = string2float(data)
+        # data_list[4] = -data_list[4]
+        # data_list[5] = -data_list[5]
+        return data_list
+
+    except socket.timeout:  # fail after 1 second of no activity
+        logger.print_trace_error(dh_network + " : Didn't receive anymore data! [Timeout]")
+    except:
+        logger.print_trace_warning(dh_network + " fi_dh.get_root() except")
+
+
+def get_status():
+    tx_messages = struct.pack('>B', 0x05)
+    s.sendto(tx_messages, (dh_network, dh_port_ctrl))
+    try:
+        data, address = s.recvfrom(1024)
+        logger.print_trace("Received from {}:{}".format(address, data.decode("utf-8")))
+        data_list = string2float(data)
+        # data_list[4] = -data_list[4]
+        # data_list[5] = -data_list[5]
+        return data_list
+
+    except socket.timeout:  # fail after 1 second of no activity
+        logger.print_trace_error(dh_network + " : Didn't receive anymore data! [Timeout]")
+    except:
+        logger.print_trace_warning(dh_network + " fi_dh.get_root() except")
+
 
 def get_anglular_speed(id):
     tx_messages = struct.pack('>BBBB', 0x03, 0x02, 0x02, id)
@@ -151,23 +223,84 @@ def get_anglular_speed(id):
     except:
         logger.print_trace_warning(dh_network + " fi_dh.get_root() except")
 
-def get_current(id):
-    tx_messages = struct.pack('>BBBB', 0x03, 0x03, 0x01, id)
-    s.sendto(tx_messages, (dh_network, dh_port_comm))
+def get_current():
+    tx_messages = struct.pack('>B', 0x04)
+    s.sendto(tx_messages, (dh_network, dh_port_ctrl))
     try:
         data, address = s.recvfrom(1024)
         logger.print_trace("Received from {}:{}".format(address, data))
-        if id == 0:
-            current1, current2, current3, current4, current5, current6 = struct.unpack('>ffffff', data[0:4 + 4 + 4 + 4 + 4 + 4])
-            return current1, current2, current3, current4, current5, current6
-        else:
-            current = struct.unpack('>f', data[0:4])
-            return current
+        data_list = string2float(data)
+        return data_list
 
     except socket.timeout:  # fail after 1 second of no activity
         logger.print_trace_error(dh_network + " : Didn't receive anymore data! [Timeout]")
     except:
         logger.print_trace_warning(dh_network + " fi_dh.get_root() except")
+
+
+def get_errorcode():
+    tx_messages = struct.pack('>B', 0x06)
+    s.sendto(tx_messages, (dh_network, dh_port_ctrl))
+    try:
+        data, address = s.recvfrom(1024)
+        logger.print_trace("Received from {}:{}".format(address, data))
+        data_list = string2float(data)
+        return data_list
+
+    except socket.timeout:  # fail after 1 second of no activity
+        logger.print_trace_error(dh_network + " : Didn't receive anymore data! [Timeout]")
+    except:
+        logger.print_trace_warning(dh_network + " fi_dh.get_root() except")
+
+
+def get_version():
+    tx_messages = struct.pack('>B', 0x14)
+    s.sendto(tx_messages, (dh_network, dh_port_ctrl))
+    try:
+        data, address = s.recvfrom(1024)
+        logger.print_trace("Received from {}:{}".format(address, data))
+        return str(data)
+
+    except socket.timeout:  # fail after 1 second of no activity
+        logger.print_trace_error(dh_network + " : Didn't receive anymore data! [Timeout]")
+    except:
+        logger.print_trace_warning(dh_network + " fi_dh.get_root() except")
+
+
+def get_ip():
+    tx_messages = struct.pack('>B', 0x15)
+    s.sendto(tx_messages, (dh_network, dh_port_ctrl))
+    try:
+        data, address = s.recvfrom(1024)
+        logger.print_trace("Received from {}:{}".format(address, data))
+        return str(data)
+
+    except socket.timeout:  # fail after 1 second of no activity
+        logger.print_trace_error(dh_network + " : Didn't receive anymore data! [Timeout]")
+    except:
+        logger.print_trace_warning(dh_network + " fi_dh.get_root() except")
+
+
+def get_pid():
+    msg = 0x08
+    ret_pid = []
+    while True:
+        tx_messages = struct.pack('>B', msg)
+        s.sendto(tx_messages, (dh_network, dh_port_ctrl))
+        try:
+            data, address = s.recvfrom(1024)
+            logger.print_trace("Received from {}:{}".format(address, data))
+            data_list = string2float(data)
+            ret_pid.append(data_list)
+            if msg == 0x10:
+                return ret_pid
+            msg = msg + 1
+
+        except socket.timeout:  # fail after 1 second of no activity
+            logger.print_trace_error(dh_network + " : Didn't receive anymore data! [Timeout]")
+        except:
+            logger.print_trace_warning(dh_network + " fi_dh.get_root() except")
+
 
 def comm_get_cnt(isALl):
 
@@ -216,9 +349,39 @@ def get_fdb():
         logger.print_trace_warning(dh_network + " fi_dh.get_root() except")
 
 
-def loop_angle(target1, target2, target3, target4, target5, target6):
+def loop_angle(target1, target2, target3, target4, target5, target6, cur_angle):
+    tar1 = target1[0]
+    flg = 0
+    
+    # if (target4[0] != cur_angle[3]) and (cur_angle[0] > -100) and (float(target4[0] > 500 or cur_angle[3] > 500)):
+    #     target1[0] = -500
+    #     flg = 1
+
+
+    # if ((target3[0] > 800) or (float(cur_angle[2]) > 800) or (target5[0] > 650) or (float(cur_angle[4]) > 650)) and (float(target1[0]) > 700):
+    #     target1[0] = -500
+    #     flg = 1
+
+    if (float(target4[0]) > 500) or (float(cur_angle[3] > 500)):
+        if ((float(target1[0]) > -500) or (float(cur_angle[0] > -500))):
+            target1[0] = -500
+            flg = 1  
+
+    if flg:
+        tx_messages = struct.pack('>BBBBffffffffffffffffffffffff', 0x01, 0x02, 0x00, 0x00, target1[0], target1[1], target1[2], target1[3], target2[0], target2[1], target2[2], target2[3], target3[0], target3[1], target3[2], target3[3], target4[0], target4[1], target4[2], target4[3], target5[0], target5[1], target5[2], target5[3], target6[0], target6[1], target6[2], target6[3])
+        s.sendto(tx_messages, (dh_network, dh_port_comm))
+        time.sleep(0.8)
+        target1[0] = tar1
+    
     tx_messages = struct.pack('>BBBBffffffffffffffffffffffff', 0x01, 0x02, 0x00, 0x00, target1[0], target1[1], target1[2], target1[3], target2[0], target2[1], target2[2], target2[3], target3[0], target3[1], target3[2], target3[3], target4[0], target4[1], target4[2], target4[3], target5[0], target5[1], target5[2], target5[3], target6[0], target6[1], target6[2], target6[3])
     s.sendto(tx_messages, (dh_network, dh_port_comm))
+
+
+def pid_param(target1, target2, target3, target4, target5, target6):
+
+    tx_messages = struct.pack('>BBBBffffffffffffffffffffffff', 0x01, 0x02, 0x00, 0x00, target1[0], target1[1], target1[2], target1[3], target2[0], target2[1], target2[2], target2[3], target3[0], target3[1], target3[2], target3[3], target4[0], target4[1], target4[2], target4[3], target5[0], target5[1], target5[2], target5[3], target6[0], target6[1], target6[2], target6[3])
+    s.sendto(tx_messages, (dh_network, dh_port_comm))
+    
 
 
 def test_report():
@@ -250,17 +413,19 @@ def test_report():
         logger.print_trace_warning(dh_network + " fi_dh.get_root() except")
 
 
-def get_angle_limited():
 
-    tx_messages = struct.pack('>BB', 0x01, 0x04)
-    s.sendto(tx_messages, (dh_network, dh_port_comm))
+
+def recvfrom_hand():
     try:
-        data, address = s.recvfrom(2048)
-        float_arr = string2float(data)  
-        float_arr[4] = -float_arr[4]          
-        float_arr[5] = -float_arr[5] 
-        return float_arr         
-        
+        data, address = recv_socket.recvfrom(2048)
+        data_list = string2float(data)
+        arr = np.array(data_list)
+        split_arr = np.reshape(arr, (6, 4))
+        recv_socket_buff = split_arr.tolist()
+        recv_socket_buff[4][0] = -recv_socket_buff[4][0]
+        recv_socket_buff[5][0] = -recv_socket_buff[5][0]
+        logger.print_trace("{}".format(address))
+        return recv_socket_buff
     except socket.timeout:  # fail after 1 second of no activity
         logger.print_trace_error(dh_network + " : Didn't receive anymore data! [Timeout]")
     except:
