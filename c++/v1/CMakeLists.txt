@@ -16,7 +16,7 @@ foreach(src_file ${main_sources})
     string(TOUPPER "${exec_name}" exec_name) # 可选：转换为大写，避免名称冲突  
       
     # 添加可执行文件目标  
-    add_executable(${exec_name} ${src_file})  
+    add_executable(${exec_name} ${src_file} ${PROJECT_SOURCE_DIR}/source/dh.cpp ${PROJECT_SOURCE_DIR}/source/logger.cpp ${PROJECT_SOURCE_DIR}/source/os.cpp)  
     target_link_libraries(${exec_name} pthread)
       
     # 设置编译选项（可选）  

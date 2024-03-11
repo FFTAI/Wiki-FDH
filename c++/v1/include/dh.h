@@ -19,35 +19,87 @@
 #include "os.h"
 #include "logger.h"
 
-#define BROADCAST_IP    "192.168.137.255"
-#define CTRL_PORT       2334
-#define FDB_PORT        2333
+#define BROADCAST_IP "192.168.137.255"
+#define LEFT_IP "192.168.137.39"
+#define RIGHT_IP "192.168.137.19"
+#define CTRL_PORT 2334
+#define FDB_PORT 2333
+#define BUFFSIZE 1024
 
-class DhCls
+#define DEBUG
+
+namespace DH
 {
-private:
-    int isInit = 0;
-    int dh_socket;
+    typedef enum
+    {
+        LEFT_HAND,
+        RIGHT_HAND
+    } HandTypeDef;
 
-public:
-    struct sockaddr_in ctrl_addr, fdb_addr, recv_addr;
-    socklen_t sockaddr_len = sizeof(struct sockaddr_in);
-    
+    typedef enum
+    {
+        GET_ANGLE = 0x02,
+    } GetFdbControlWordTypeDef;
 
-private:
-    int init(); 
-    int communicaiton(char *ip, int port, char *sendmsg, char *recvmsg);
-    int encode(char *en_msg);
-    int decode(char *de_msg);
+    typedef enum
+    {
+        POSITION,
+        SPEED,
+        CURRENT
+    } LoopTypeDef;
 
-public:
-    DhCls(/* args */);
-    ~DhCls();
+    typedef enum
+    {
+        THUMB_A = 0x01,
+        LITTLE_F = 0x02,
+        MIDDLE_F = 0x03,
+        THUMB_B = 0x04,
+        FORE_F = 0x05,
+        RING_F = 0x06
+    } FingerTypeDef;
 
-    int do_ctrl(int word);
-    int do_fdb(int word);
-};
+    class DhCls
+    {
+    private:
+        int isInit = 1;
+        int dh_socket;
+        struct sockaddr_in left_ctrl_addr, left_fdb_addr, right_ctrl_addr, right_fdb_addr, recv_addr;
+        socklen_t sockaddr_len = sizeof(struct sockaddr_in);
+        char send_msg[BUFFSIZE], recv_msg[BUFFSIZE];
 
-int get_ip(char *ip);
+    public:
+    private:
+        int init();
+        int communicaiton(std::string ip, int port);
+        int encode(uint8_t *en_msg, uint8_t msg_size);
+        int decode(uint8_t *de_msg);
+
+    public:
+        DhCls(/* args */);
+        ~DhCls();
+
+        int do_ctrl(HandTypeDef HandType, uint8_t *word, uint8_t msg_size);
+        int do_fdb(HandTypeDef HandType, GetFdbControlWordTypeDef controlword, void *fdbmsg);
+    };
+
+    /*****the hand of controller's interfaces*****/
+    int calibration();
+    int calibration(HandTypeDef HandType);
+
+    int set_pid(LoopTypeDef tar_loop, float _p, float _i, float _d);
+    int set_target(LoopTypeDef tar_loop, float _target);
+    int set_finger_limited(FingerTypeDef fingerid, float minValue, float maxValue);
+
+    /*****get the hand of controller's feedback*****/
+    std::string get_ip();
+    long long get_cnt();
+    float get_angle(HandTypeDef HandType);
+    float get_speed();
+    float get_current();
+    uint8_t get_status();
+    long get_errorcode();
+    uint8_t get_control_type();
+
+}
 
 #endif // !_DH_H_

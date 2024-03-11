@@ -1,1 +1,0 @@
-/usr/bin/c++     CMakeFiles/TEST2.dir/source/demo_test2.cpp.o  -o ../bin/TEST2  -lpthread 

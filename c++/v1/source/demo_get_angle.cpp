@@ -1,8 +1,11 @@
 #include <iostream>
 #include "dh.h"
 
+using namespace DH;
+
+
 int main()
 {
-    std::cout << "1" << std::endl;
+    get_angle(RIGHT_HAND);
     return 0;
 }
