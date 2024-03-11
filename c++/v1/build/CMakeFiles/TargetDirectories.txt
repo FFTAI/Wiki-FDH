@@ -1,0 +1,3 @@
+/home/afer/project_user/dh/wiki-dh/v1/build/CMakeFiles/rebuild_cache.dir
+/home/afer/project_user/dh/wiki-dh/v1/build/CMakeFiles/edit_cache.dir
+/home/afer/project_user/dh/wiki-dh/v1/build/CMakeFiles/TEST.dir
