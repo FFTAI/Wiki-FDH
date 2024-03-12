@@ -48,10 +48,10 @@ s.settimeout(dh_timeout)
 s.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
 
 # config 2333 port , recvfrom active report message
-recv_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-recv_socket.settimeout(dh_timeout)
-server_address = ('192.168.137.1', 8888)  
-recv_socket.bind(server_address)  
+# recv_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+# recv_socket.settimeout(dh_timeout)
+# server_address = ('192.168.137.1', 8888)  
+# recv_socket.bind(server_address)  
 recv_socket_buff = []
 
 logger.print_trace("DH start listening for broadcast...")

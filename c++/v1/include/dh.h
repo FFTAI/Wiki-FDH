@@ -9,12 +9,6 @@
 #include <sstream>
 #include <vector>
 
-#include "rapidjson/stringbuffer.h"
-#include "rapidjson/writer.h"
-
-#include "rapidjson/rapidjson.h"
-#include "rapidjson/document.h"
-
 #include "function_result.h"
 #include "os.h"
 #include "logger.h"
@@ -65,7 +59,7 @@ namespace DH
         int dh_socket;
         struct sockaddr_in left_ctrl_addr, left_fdb_addr, right_ctrl_addr, right_fdb_addr, recv_addr;
         socklen_t sockaddr_len = sizeof(struct sockaddr_in);
-        char send_msg[BUFFSIZE], recv_msg[BUFFSIZE];
+        uint8_t send_msg[BUFFSIZE], recv_msg[BUFFSIZE];
 
     public:
     private:

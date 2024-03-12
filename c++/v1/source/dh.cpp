@@ -66,27 +66,33 @@ int DH::DhCls::communicaiton(std::string ip, int port)
 
     if ((LEFT_IP == ip) && (port == CTRL_PORT))
     {
-        ret = sendto(this->dh_socket, this->send_msg, BUFFSIZE, 0, (struct sockaddr *)&this->left_ctrl_addr, sockaddr_len);
+        ret = sendto(this->dh_socket, this->send_msg, BUFFSIZE, 0, (struct sockaddr *)&this->left_ctrl_addr, sizeof(this->left_ctrl_addr));
 #ifdef DEBUG
 #endif
     }
     else if ((LEFT_IP == ip) && (port == FDB_PORT))
     {
-        ret = sendto(this->dh_socket, this->send_msg, BUFFSIZE, 0, (struct sockaddr *)&this->left_fdb_addr, sockaddr_len);
+        ret = sendto(this->dh_socket, this->send_msg, BUFFSIZE, 0, (struct sockaddr *)&this->left_fdb_addr, sizeof(this->left_fdb_addr));
 #ifdef DEBUG
 
 #endif
     }
     else if ((RIGHT_IP == ip) && (port == CTRL_PORT))
     {
-        ret = sendto(this->dh_socket, this->send_msg, BUFFSIZE, 0, (struct sockaddr *)&this->right_ctrl_addr, sockaddr_len);
+        ret = sendto(this->dh_socket, this->send_msg, BUFFSIZE, 0, (struct sockaddr *)&this->right_ctrl_addr, sizeof(this->right_ctrl_addr));
 #ifdef DEBUG
+        Logger::get_instance()->print_trace_debug("send output->");
+        for (int i = 0; i < 2; i++)
+        {
+            std::cout << std::hex << static_cast<int>(this->send_msg[i]) << " ";
+        }
+        std::cout << std::endl;
 
 #endif
     }
     else if ((RIGHT_IP == ip) && (port == FDB_PORT))
     {
-        ret = sendto(this->dh_socket, this->send_msg, BUFFSIZE, 0, (struct sockaddr *)&this->right_fdb_addr, sockaddr_len);
+        ret = sendto(this->dh_socket, this->send_msg, BUFFSIZE, 0, (struct sockaddr *)&this->right_fdb_addr, sizeof(this->right_fdb_addr));
 #ifdef DEBUG
 
 #endif
@@ -131,8 +137,20 @@ int DH::DhCls::communicaiton(std::string ip, int port)
 int DH::DhCls::encode(uint8_t *en_msg, uint8_t msg_size)
 {
     memset(this->send_msg, 0, BUFFSIZE);
+    unsigned char *bytes = reinterpret_cast<unsigned char *>(en_msg);
+    for (int i = 0; i < msg_size; ++i)
+    {
+        std::cout << std::hex << static_cast<int>(bytes[i]) << " ";
+    }
+    std::cout << std::endl;
 
-    memcpy(this->send_msg, en_msg, msg_size);
+    memcpy(this->send_msg, bytes, msg_size);
+    for (int i = 0; i < msg_size; i++)
+    {
+        std::cout << std::hex << static_cast<int>(this->send_msg[i]) << " ";
+    }
+    std::cout << std::endl;
+
 #ifdef DEBUG
     for (uint8_t i = 0; i < msg_size; i++)
     {
