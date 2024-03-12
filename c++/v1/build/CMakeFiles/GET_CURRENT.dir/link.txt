@@ -1,0 +1,1 @@
+/usr/bin/c++     CMakeFiles/GET_CURRENT.dir/source/demo_get_current.cpp.o CMakeFiles/GET_CURRENT.dir/source/dh.cpp.o CMakeFiles/GET_CURRENT.dir/source/logger.cpp.o CMakeFiles/GET_CURRENT.dir/source/os.cpp.o  -o ../bin/GET_CURRENT  -lpthread 

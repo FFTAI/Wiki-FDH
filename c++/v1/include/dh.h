@@ -99,6 +99,7 @@ namespace DH
 
         int do_ctrl(HandTypeDef HandType, uint8_t *word, uint8_t msg_size);
         int do_fdb(HandTypeDef HandType, GetFdbControlWordTypeDef controlword, ParseTypeDef FdbType, void *fdbmsg);
+        void obj2uint8arr(auto param, uint8_t *ret_arr, uint8_t arr_size);
     };
 
     /*****the hand of controller's interfaces*****/
@@ -108,12 +109,14 @@ namespace DH
     int get_mechanical_limit();
     int get_mechanical_limit(HandTypeDef HandType);
 
-    int set_pid(LoopTypeDef tar_loop, float _p, float _i, float _d);
-    int set_target(LoopTypeDef tar_loop, float _target);
-    int set_finger_limited(FingerTypeDef fingerid, float minValue, float maxValue);
+    int emergency_stop();
+    int emergency_stop(HandTypeDef HandType);
+    /*****set the hand of controller's parameter*****/
+    int set_pid(HandTypeDef HandType, LoopTypeDef tar_loop, FingerTypeDef fingerid, float _p, float _i, float _d);
+    int set_target(HandTypeDef HandType, LoopTypeDef tar_loop, FingerTypeDef fingerid, float _target);
+    int set_finger_limited(HandTypeDef HandType, LoopTypeDef tar_loop, FingerTypeDef fingerid, float minValue, float maxValue);
 
     /*****get the hand of controller's feedback*****/
-    std::string get_ip(HandTypeDef HandType);
     long long get_cnt(HandTypeDef HandType, FingerTypeDef fingetid);
     float get_angle(HandTypeDef HandType, FingerTypeDef fingetid);
     float get_speed(HandTypeDef HandType, FingerTypeDef fingetid);
@@ -129,6 +132,9 @@ namespace DH
     float get_angle_limited(HandTypeDef HandType, FingerTypeDef fingetid);
     float get_speed_limited(HandTypeDef HandType, FingerTypeDef fingetid);
     float get_current_limited(HandTypeDef HandType, FingerTypeDef fingetid);
+
+    std::string get_ip(HandTypeDef HandType);
+    std::string get_version(HandTypeDef HandType);
 }
 
 #endif // !_DH_H_

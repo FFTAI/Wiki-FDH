@@ -381,6 +381,26 @@ int DH::DhCls::do_fdb(HandTypeDef HandType, GetFdbControlWordTypeDef controlword
     return FunctionResult::SUCCESS;
 }
 
+/// @brief Converts a number of an unknown type to a byte stream and big-endian sort
+/// @param type 
+/// @param param 
+/// @param ret_arr 
+/// @param arr_size 
+void DH::DhCls::obj2uint8arr(auto param, uint8_t *ret_arr, uint8_t arr_size)
+{
+    if (arr_size <= 0)
+    {
+        Logger::get_instance()->print_trace_error("arr_size must > 0\n");
+        return;
+    }
+    unsigned int temp = *(unsigned int *)&param;
+    uint8_t arr_index = 0;
+    for (uint8_t i = arr_size -1; i >= 0; i++)
+    {
+        ret_arr[arr_index++] = (temp >> i * 8) & 0xFF;
+    }   
+}
+
 /*****user interface*****/
 DH::DhCls *HandControl = new DH::DhCls();
 
@@ -449,6 +469,30 @@ int DH::get_mechanical_limit(HandTypeDef HandType)
     uint8_t buff[2] = {0x01, 0x04};
     HandControl->do_ctrl(HandType, buff, sizeof(buff));
 }
+
+int DH::emergency_stop()
+{
+}
+
+int DH::emergency_stop(HandTypeDef HandType)
+{
+}
+
+/*****set the hand of controller's parameter*****/
+int DH::set_pid(HandTypeDef HandType, LoopTypeDef tar_loop, FingerTypeDef fingerid, float _p, float _i, float _d)
+{
+
+}
+
+int DH::set_target(HandTypeDef HandType, LoopTypeDef tar_loop, FingerTypeDef fingerid, float _target)
+{
+}
+
+int DH::set_finger_limited(HandTypeDef HandType, LoopTypeDef tar_loop, FingerTypeDef fingerid, float minValue, float maxValue)
+{
+}
+
+/*****get the hand of controller's feedback*****/
 
 /// @brief Get hand ip
 /// @param HandType
@@ -700,4 +744,24 @@ float DH::get_current_limited(HandTypeDef HandType, FingerTypeDef fingetid)
         return FunctionResult::FAILURE;
     }
     return limitparam[fingetid - 1];
+}
+
+std::string DH::get_version(HandTypeDef HandType)
+{
+    char ret[16] = {0};
+    char buff[1024] = {0};
+    if (HandControl->do_fdb(HandType, GET_VERSION, PARSE_STRING, (void *)buff) == FunctionResult::FAILURE)
+    {
+        Logger::get_instance()->print_trace_error("get version failed\n");
+        return "";
+    }
+    memccpy(ret, buff, '*', sizeof(ret));
+    for (uint8_t i = 0; i < sizeof(ret); i++)
+    {
+        if (ret[i] == '*')
+        {
+            ret[i] = ' ';
+        }
+    }
+    return std::string(ret);
 }

@@ -1,0 +1,1 @@
+/usr/bin/c++     CMakeFiles/GET_DRIVER_VERSION.dir/source/demo_get_driver_version.cpp.o CMakeFiles/GET_DRIVER_VERSION.dir/source/dh.cpp.o CMakeFiles/GET_DRIVER_VERSION.dir/source/logger.cpp.o CMakeFiles/GET_DRIVER_VERSION.dir/source/os.cpp.o  -o ../bin/GET_DRIVER_VERSION  -lpthread 

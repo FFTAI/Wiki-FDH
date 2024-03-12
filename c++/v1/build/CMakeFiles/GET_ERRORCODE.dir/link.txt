@@ -1,0 +1,1 @@
+/usr/bin/c++     CMakeFiles/GET_ERRORCODE.dir/source/demo_get_errorcode.cpp.o CMakeFiles/GET_ERRORCODE.dir/source/dh.cpp.o CMakeFiles/GET_ERRORCODE.dir/source/logger.cpp.o CMakeFiles/GET_ERRORCODE.dir/source/os.cpp.o  -o ../bin/GET_ERRORCODE  -lpthread 
