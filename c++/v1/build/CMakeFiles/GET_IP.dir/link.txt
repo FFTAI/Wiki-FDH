@@ -1,1 +1,0 @@
-/usr/bin/c++     CMakeFiles/GET_IP.dir/source/demo_get_ip.cpp.o CMakeFiles/GET_IP.dir/source/dh.cpp.o CMakeFiles/GET_IP.dir/source/logger.cpp.o CMakeFiles/GET_IP.dir/source/os.cpp.o  -o ../bin/GET_IP  -lpthread 
