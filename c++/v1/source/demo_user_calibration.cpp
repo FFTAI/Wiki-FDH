@@ -2,10 +2,21 @@
 #include "dh.h"
 
 using namespace DH;
+using namespace Predefine;
+using namespace Utils;
 
 
 int main()
 {
-    calibration(RIGHT_HAND);
+    if (calibration(RIGHT_HAND) == FunctionResult::FAILURE)
+    {
+        Logger::get_instance()->print_trace_error("calibration failed\n");
+        return FunctionResult::FAILURE;
+    }
+    if (get_mechanical_limit(RIGHT_HAND) == FunctionResult::FAILURE)
+    {
+        Logger::get_instance()->print_trace_error("get the mechanial motion limit failed\n");
+        return FunctionResult::FAILURE;
+    }
     return 0;
 }

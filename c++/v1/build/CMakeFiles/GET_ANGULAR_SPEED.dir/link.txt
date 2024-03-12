@@ -1,0 +1,1 @@
+/usr/bin/c++     CMakeFiles/GET_ANGULAR_SPEED.dir/source/demo_get_angular_speed.cpp.o CMakeFiles/GET_ANGULAR_SPEED.dir/source/dh.cpp.o CMakeFiles/GET_ANGULAR_SPEED.dir/source/logger.cpp.o CMakeFiles/GET_ANGULAR_SPEED.dir/source/os.cpp.o  -o ../bin/GET_ANGULAR_SPEED  -lpthread 

@@ -1,17 +1,19 @@
-
-# Consider dependencies only in project.
-set(CMAKE_DEPENDS_IN_PROJECT_ONLY OFF)
-
 # The set of languages for which implicit dependencies are needed:
 set(CMAKE_DEPENDS_LANGUAGES
+  "CXX"
   )
+# The set of files for implicit dependencies of each language:
+set(CMAKE_DEPENDS_CHECK_CXX
+  "/home/afer/project_user/dh/wiki-dh/c++/v1/source/demo_user_calibration.cpp" "/home/afer/project_user/dh/wiki-dh/c++/v1/build/CMakeFiles/USER_CALIBRATION.dir/source/demo_user_calibration.cpp.o"
+  "/home/afer/project_user/dh/wiki-dh/c++/v1/source/dh.cpp" "/home/afer/project_user/dh/wiki-dh/c++/v1/build/CMakeFiles/USER_CALIBRATION.dir/source/dh.cpp.o"
+  "/home/afer/project_user/dh/wiki-dh/c++/v1/source/logger.cpp" "/home/afer/project_user/dh/wiki-dh/c++/v1/build/CMakeFiles/USER_CALIBRATION.dir/source/logger.cpp.o"
+  "/home/afer/project_user/dh/wiki-dh/c++/v1/source/os.cpp" "/home/afer/project_user/dh/wiki-dh/c++/v1/build/CMakeFiles/USER_CALIBRATION.dir/source/os.cpp.o"
+  )
+set(CMAKE_CXX_COMPILER_ID "GNU")
 
-# The set of dependency files which are needed:
-set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/debug/catkin_ws/wiki-dh/c++/v1/source/demo_user_calibration.cpp" "CMakeFiles/USER_CALIBRATION.dir/source/demo_user_calibration.cpp.o" "gcc" "CMakeFiles/USER_CALIBRATION.dir/source/demo_user_calibration.cpp.o.d"
-  "/home/debug/catkin_ws/wiki-dh/c++/v1/source/dh.cpp" "CMakeFiles/USER_CALIBRATION.dir/source/dh.cpp.o" "gcc" "CMakeFiles/USER_CALIBRATION.dir/source/dh.cpp.o.d"
-  "/home/debug/catkin_ws/wiki-dh/c++/v1/source/logger.cpp" "CMakeFiles/USER_CALIBRATION.dir/source/logger.cpp.o" "gcc" "CMakeFiles/USER_CALIBRATION.dir/source/logger.cpp.o.d"
-  "/home/debug/catkin_ws/wiki-dh/c++/v1/source/os.cpp" "CMakeFiles/USER_CALIBRATION.dir/source/os.cpp.o" "gcc" "CMakeFiles/USER_CALIBRATION.dir/source/os.cpp.o.d"
+# The include file search paths:
+set(CMAKE_CXX_TARGET_INCLUDE_PATH
+  "../include"
   )
 
 # Targets to which this target links.

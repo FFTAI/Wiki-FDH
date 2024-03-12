@@ -1,0 +1,1 @@
+/usr/bin/c++     CMakeFiles/GET_CONTROL_TYPE.dir/source/demo_get_control_type.cpp.o CMakeFiles/GET_CONTROL_TYPE.dir/source/dh.cpp.o CMakeFiles/GET_CONTROL_TYPE.dir/source/logger.cpp.o CMakeFiles/GET_CONTROL_TYPE.dir/source/os.cpp.o  -o ../bin/GET_CONTROL_TYPE  -lpthread 

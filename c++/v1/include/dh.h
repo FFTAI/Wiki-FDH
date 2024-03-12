@@ -32,7 +32,22 @@ namespace DH
 
     typedef enum
     {
-        GET_ANGLE = 0x02,
+        GET_CNT = 0x01,
+        GET_ANGLE,
+        GET_SPEED,
+        GET_CURRENT,
+        GET_STATUS,
+        GET_ERRORCODE,
+        GET_CONTROL_TYPE,
+        GET_P,
+        GET_I,
+        GET_D,
+        GET_ANGLE_LIMITED,
+        GET_SPEED_LIMITED,
+        GET_CURRENT_LIMITED,
+        GET_VERSION,
+        GET_IP,
+        GET_,
     } GetFdbControlWordTypeDef;
 
     typedef enum
@@ -52,6 +67,16 @@ namespace DH
         RING_F = 0x06
     } FingerTypeDef;
 
+    typedef enum
+    {
+        NONE,
+        PARSE_STRING,
+        PARSE_LONG_LONG,
+        PARSE_FLOAT,
+        PARSE_UINT8,
+        PARSE_LONG
+    } ParseTypeDef;
+
     class DhCls
     {
     private:
@@ -64,36 +89,46 @@ namespace DH
     public:
     private:
         int init();
-        int communicaiton(std::string ip, int port);
+        int communicaiton(std::string ip, int port, int sendsize);
         int encode(uint8_t *en_msg, uint8_t msg_size);
-        int decode(uint8_t *de_msg);
+        int decode(ParseTypeDef FdbType, void *retmsg);
 
     public:
         DhCls(/* args */);
         ~DhCls();
 
         int do_ctrl(HandTypeDef HandType, uint8_t *word, uint8_t msg_size);
-        int do_fdb(HandTypeDef HandType, GetFdbControlWordTypeDef controlword, void *fdbmsg);
+        int do_fdb(HandTypeDef HandType, GetFdbControlWordTypeDef controlword, ParseTypeDef FdbType, void *fdbmsg);
     };
 
     /*****the hand of controller's interfaces*****/
     int calibration();
     int calibration(HandTypeDef HandType);
 
+    int get_mechanical_limit();
+    int get_mechanical_limit(HandTypeDef HandType);
+
     int set_pid(LoopTypeDef tar_loop, float _p, float _i, float _d);
     int set_target(LoopTypeDef tar_loop, float _target);
     int set_finger_limited(FingerTypeDef fingerid, float minValue, float maxValue);
 
     /*****get the hand of controller's feedback*****/
-    std::string get_ip();
-    long long get_cnt();
-    float get_angle(HandTypeDef HandType);
-    float get_speed();
-    float get_current();
-    uint8_t get_status();
-    long get_errorcode();
-    uint8_t get_control_type();
+    std::string get_ip(HandTypeDef HandType);
+    long long get_cnt(HandTypeDef HandType, FingerTypeDef fingetid);
+    float get_angle(HandTypeDef HandType, FingerTypeDef fingetid);
+    float get_speed(HandTypeDef HandType, FingerTypeDef fingetid);
+    float get_current(HandTypeDef HandType, FingerTypeDef fingetid);
+    uint8_t get_status(HandTypeDef HandType, FingerTypeDef fingetid);
+    long get_errorcode(HandTypeDef HandType, FingerTypeDef fingetid);
+    uint8_t get_control_type(HandTypeDef HandType, FingerTypeDef fingetid);
 
+    float get_p(HandTypeDef HandType, FingerTypeDef fingetid);
+    float get_i(HandTypeDef HandType, FingerTypeDef fingetid);
+    float get_d(HandTypeDef HandType, FingerTypeDef fingetid);
+
+    float get_angle_limited(HandTypeDef HandType, FingerTypeDef fingetid);
+    float get_speed_limited(HandTypeDef HandType, FingerTypeDef fingetid);
+    float get_current_limited(HandTypeDef HandType, FingerTypeDef fingetid);
 }
 
 #endif // !_DH_H_
