@@ -48,10 +48,10 @@ s.settimeout(dh_timeout)
 s.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
 
 # config 2333 port , recvfrom active report message
-# recv_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-# recv_socket.settimeout(dh_timeout)
-# server_address = ('192.168.137.1', 8888)  
-# recv_socket.bind(server_address)  
+recv_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+recv_socket.settimeout(dh_timeout)
+server_address = ('192.168.137.1', 8888)  
+recv_socket.bind(server_address)  
 recv_socket_buff = []
 
 logger.print_trace("DH start listening for broadcast...")
@@ -320,14 +320,29 @@ def comm_get_cnt(isALl):
 def calibration():
     tx_messages = struct.pack('>BB', 0x01, 0x01)
     s.sendto(tx_messages, (dh_network, dh_port_comm))
-    try:
-        data, address = s.recvfrom(1024)
-        logger.print_trace("Received from {}:{}".format(address, data.decode('utf-8')))
+    # try:
+    #     data, address = s.recvfrom(1024)
+    #     logger.print_trace("Received from {}:{}".format(address, data.decode('utf-8')))
         
-    except socket.timeout:  # fail after 1 second of no activity
-        logger.print_trace_error(dh_network + " : Didn't receive anymore data! [Timeout]")
-    except:
-        logger.print_trace_warning(dh_network + " fi_dh.get_root() except")
+    # except socket.timeout:  # fail after 1 second of no activity
+    #     logger.print_trace_error(dh_network + " : Didn't receive anymore data! [Timeout]")
+    # except:
+    #     logger.print_trace_warning(dh_network + " fi_dh.get_root() except")
+
+
+def set_target_angle(id, target):
+    tx_messages = struct.pack('>BBBBf', 0x01, 0x02, 0x00, id, float(target))
+    s.sendto(tx_messages, (dh_network, dh_port_comm))
+
+
+def set_pid_angle(id, pid):
+    tx_messages = struct.pack('>BBBBfff', 0x01, 0x05, 0x00, id, float(pid[0]), float(pid[1]), float(pid[2]))
+    s.sendto(tx_messages, (dh_network, dh_port_comm))
+
+
+def set_limit_angle(id, limit):
+    tx_messages = struct.pack('>BBBBf', 0x01, 0x08, 0x00, id, float(limit))
+    s.sendto(tx_messages, (dh_network, dh_port_comm))
 
 
 def get_fdb():
