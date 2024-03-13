@@ -1,1 +1,0 @@
-/usr/bin/c++     CMakeFiles/GET_CNT.dir/source/demo_get_cnt.cpp.o CMakeFiles/GET_CNT.dir/source/dh.cpp.o CMakeFiles/GET_CNT.dir/source/logger.cpp.o CMakeFiles/GET_CNT.dir/source/os.cpp.o  -o ../bin/GET_CNT  -lpthread 

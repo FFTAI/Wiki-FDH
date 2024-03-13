@@ -1,1 +1,0 @@
-/usr/bin/c++     CMakeFiles/SET_CURRENT_TARGET.dir/source/demo_set_current_target.cpp.o CMakeFiles/SET_CURRENT_TARGET.dir/source/dh.cpp.o CMakeFiles/SET_CURRENT_TARGET.dir/source/logger.cpp.o CMakeFiles/SET_CURRENT_TARGET.dir/source/os.cpp.o  -o ../bin/SET_CURRENT_TARGET  -lpthread 

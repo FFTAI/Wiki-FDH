@@ -1,1 +1,0 @@
-/usr/bin/c++     CMakeFiles/SET_ANGLE_TARGET.dir/source/demo_set_angle_target.cpp.o CMakeFiles/SET_ANGLE_TARGET.dir/source/dh.cpp.o CMakeFiles/SET_ANGLE_TARGET.dir/source/logger.cpp.o CMakeFiles/SET_ANGLE_TARGET.dir/source/os.cpp.o  -o ../bin/SET_ANGLE_TARGET  -lpthread 

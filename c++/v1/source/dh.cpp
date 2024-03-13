@@ -109,18 +109,19 @@ int DH::DhCls::communicaiton(std::string ip, int port, int sendsize)
         return FunctionResult::FAILURE;
     }
 
-    // ret = -1;
-    // if (recvmsg == NULL)
-    // {
-    //     return FunctionResult::SUCCESS;
-    // }
+    if (sendsize > 1)
+    {
+        // control communication not reply
+        return FunctionResult::SUCCESS;
+    }
+    
 
     do
     {
         ret = recvfrom(this->dh_socket, this->recv_msg, BUFFSIZE, 0, (struct sockaddr *)&this->recv_addr, &sockaddr_len);
         if (ret <= 0)
         {
-            Logger::get_instance()->print_trace_warning("Cannot receive msg, ErrorCode: 1001\n");
+            // Logger::get_instance()->print_trace_warning("Cannot receive msg, ErrorCode: 1001\n");
         }
         else
         {
@@ -439,37 +440,6 @@ int DH::calibration(HandTypeDef HandType)
     return FunctionResult::SUCCESS;
 }
 
-/// @brief
-/// @return -1 or 0
-///     @note -1 means failed
-///     @note  0 means success
-int DH::get_mechanical_limit()
-{
-    uint8_t buff[2] = {0x01, 0x04};
-    if (HandControl->do_ctrl(LEFT_HAND, buff, sizeof(buff)) == FunctionResult::FAILURE)
-    {
-        return FunctionResult::FAILURE;
-    }
-    if (HandControl->do_ctrl(RIGHT_HAND, buff, sizeof(buff)) == FunctionResult::FAILURE)
-    {
-        return FunctionResult::FAILURE;
-    }
-    return FunctionResult::SUCCESS;
-}
-
-/// @brief
-/// @param HandType
-///     @param  -LEFT_HAND
-///     @param  -RIGHT_HAND
-/// @return -1 or 0
-///     @note -1 means failed
-///     @note  0 means success
-int DH::get_mechanical_limit(HandTypeDef HandType)
-{
-    uint8_t buff[2] = {0x01, 0x04};
-    HandControl->do_ctrl(HandType, buff, sizeof(buff));
-}
-
 int DH::emergency_stop()
 {
 }
@@ -481,15 +451,127 @@ int DH::emergency_stop(HandTypeDef HandType)
 /*****set the hand of controller's parameter*****/
 int DH::set_pid(HandTypeDef HandType, LoopTypeDef tar_loop, FingerTypeDef fingerid, float _p, float _i, float _d)
 {
+    if ((_p < 0) || (_i < 0) || (_d < 0))
+    {
+        Logger::get_instance()->print_trace_error("_p _i _d have to be positive\n");
+        return FunctionResult::FAILURE;
+    }
+    
+    uint8_t msg[16] = {0};
+    msg[0] = 0x01;
 
+    switch (tar_loop)
+    {
+    case POSITION:
+        msg[1] = 0x05;        
+        break;
+    case SPEED:
+        msg[1] = 0x06;        
+        break;
+    case CURRENT:
+        msg[1] = 0x07;        
+        break;
+    default:
+        Logger::get_instance()->print_trace_error("Unexpected Error\n");
+        return FunctionResult::FAILURE;
+    }
+    msg[2] = 0x00;
+    msg[3] = (uint8_t)(fingerid);
+    
+    unsigned int temp = *(unsigned int *)&_p;
+    msg[4] = (temp >> 24) & 0xFF;
+    msg[5] = (temp >> 16) & 0xFF;
+    msg[6] = (temp >> 8) & 0xFF;
+    msg[7] = (temp >> 0) & 0xFF;
+    temp = *(unsigned int *)&_i;
+    msg[8] = (temp >> 24) & 0xFF;
+    msg[9] = (temp >> 16) & 0xFF;
+    msg[10] = (temp >> 8) & 0xFF;
+    msg[11] = (temp >> 0) & 0xFF;
+    temp = *(unsigned int *)&_d;
+    msg[12] = (temp >> 24) & 0xFF;
+    msg[13] = (temp >> 16) & 0xFF;
+    msg[14] = (temp >> 8) & 0xFF;
+    msg[15] = (temp >> 0) & 0xFF;
+    
+
+    if (HandControl->do_ctrl(HandType, msg, sizeof(msg)) == FunctionResult::FAILURE)
+    {
+        return FunctionResult::FAILURE;
+    }
+    return FunctionResult::SUCCESS;    
 }
 
 int DH::set_target(HandTypeDef HandType, LoopTypeDef tar_loop, FingerTypeDef fingerid, float _target)
 {
+    uint8_t msg[8] = {0};
+    msg[0] = 0x01;
+
+    switch (tar_loop)
+    {
+    case POSITION:
+        msg[1] = 0x02;        
+        break;
+    case SPEED:
+        msg[1] = 0x03;        
+        break;
+    case CURRENT:
+        msg[1] = 0x04;        
+        break;
+    default:
+        Logger::get_instance()->print_trace_error("Unexpected Error\n");
+        return FunctionResult::FAILURE;
+    }
+    msg[2] = 0x00;
+    msg[3] = (uint8_t)(fingerid);
+    
+    unsigned int temp = *(unsigned int *)&_target;
+    msg[4] = (temp >> 24) & 0xFF;
+    msg[5] = (temp >> 16) & 0xFF;
+    msg[6] = (temp >> 8) & 0xFF;
+    msg[7] = (temp >> 0) & 0xFF;
+
+    if (HandControl->do_ctrl(HandType, msg, sizeof(msg)) == FunctionResult::FAILURE)
+    {
+        return FunctionResult::FAILURE;
+    }
+    return FunctionResult::SUCCESS;  
 }
 
-int DH::set_finger_limited(HandTypeDef HandType, LoopTypeDef tar_loop, FingerTypeDef fingerid, float minValue, float maxValue)
+int DH::set_finger_limited(HandTypeDef HandType, LoopTypeDef tar_loop, FingerTypeDef fingerid, float maxValue)
 {
+    uint8_t msg[8] = {0};
+    msg[0] = 0x01;
+
+    switch (tar_loop)
+    {
+    case POSITION:
+        msg[1] = 0x08;        
+        break;
+    case SPEED:
+        msg[1] = 0x09;        
+        break;
+    case CURRENT:
+        msg[1] = 0x0a;        
+        break;
+    default:
+        Logger::get_instance()->print_trace_error("Unexpected Error\n");
+        return FunctionResult::FAILURE;
+    }
+    msg[2] = 0x00;
+    msg[3] = (uint8_t)(fingerid);
+    
+    unsigned int temp = *(unsigned int *)&maxValue;
+    msg[4] = (temp >> 24) & 0xFF;
+    msg[5] = (temp >> 16) & 0xFF;
+    msg[6] = (temp >> 8) & 0xFF;
+    msg[7] = (temp >> 0) & 0xFF;
+
+    if (HandControl->do_ctrl(HandType, msg, sizeof(msg)) == FunctionResult::FAILURE)
+    {
+        return FunctionResult::FAILURE;
+    }
+    return FunctionResult::SUCCESS;  
 }
 
 /*****get the hand of controller's feedback*****/

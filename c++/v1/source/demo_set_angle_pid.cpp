@@ -9,7 +9,7 @@ int main()
 {
     if (set_pid(RIGHT_HAND, POSITION, FORE_F, 0, 0, 0) == FunctionResult::FAILURE)
     {
-        Logger::get_instance()->print_trace_error("set limit failed\n");
+        Logger::get_instance()->print_trace_error("set pid failed\n");
     }
     return 0;
 }

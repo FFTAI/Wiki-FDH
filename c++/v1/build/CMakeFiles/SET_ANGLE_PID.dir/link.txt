@@ -1,1 +1,0 @@
-/usr/bin/c++     CMakeFiles/SET_ANGLE_PID.dir/source/demo_set_angle_pid.cpp.o CMakeFiles/SET_ANGLE_PID.dir/source/dh.cpp.o CMakeFiles/SET_ANGLE_PID.dir/source/logger.cpp.o CMakeFiles/SET_ANGLE_PID.dir/source/os.cpp.o  -o ../bin/SET_ANGLE_PID  -lpthread 

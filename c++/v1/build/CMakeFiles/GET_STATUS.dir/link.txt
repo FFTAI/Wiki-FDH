@@ -1,1 +1,0 @@
-/usr/bin/c++     CMakeFiles/GET_STATUS.dir/source/demo_get_status.cpp.o CMakeFiles/GET_STATUS.dir/source/dh.cpp.o CMakeFiles/GET_STATUS.dir/source/logger.cpp.o CMakeFiles/GET_STATUS.dir/source/os.cpp.o  -o ../bin/GET_STATUS  -lpthread 

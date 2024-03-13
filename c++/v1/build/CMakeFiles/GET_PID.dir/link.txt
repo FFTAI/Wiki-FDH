@@ -1,1 +1,0 @@
-/usr/bin/c++     CMakeFiles/GET_PID.dir/source/demo_get_pid.cpp.o CMakeFiles/GET_PID.dir/source/dh.cpp.o CMakeFiles/GET_PID.dir/source/logger.cpp.o CMakeFiles/GET_PID.dir/source/os.cpp.o  -o ../bin/GET_PID  -lpthread 

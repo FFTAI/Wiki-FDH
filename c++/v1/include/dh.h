@@ -106,15 +106,12 @@ namespace DH
     int calibration();
     int calibration(HandTypeDef HandType);
 
-    int get_mechanical_limit();
-    int get_mechanical_limit(HandTypeDef HandType);
-
     int emergency_stop();
     int emergency_stop(HandTypeDef HandType);
     /*****set the hand of controller's parameter*****/
     int set_pid(HandTypeDef HandType, LoopTypeDef tar_loop, FingerTypeDef fingerid, float _p, float _i, float _d);
     int set_target(HandTypeDef HandType, LoopTypeDef tar_loop, FingerTypeDef fingerid, float _target);
-    int set_finger_limited(HandTypeDef HandType, LoopTypeDef tar_loop, FingerTypeDef fingerid, float minValue, float maxValue);
+    int set_finger_limited(HandTypeDef HandType, LoopTypeDef tar_loop, FingerTypeDef fingerid, float maxValue);
 
     /*****get the hand of controller's feedback*****/
     long long get_cnt(HandTypeDef HandType, FingerTypeDef fingetid);
