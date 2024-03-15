@@ -2,7 +2,7 @@ import dh
 from dh_logger import logger
 
 def main():
-    dh.test_report()
+    print(dh.get_version())
 
 if __name__ == '__main__':
     main()

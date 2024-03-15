@@ -2,7 +2,9 @@ import dh
 from dh_logger import logger
 
 def main():
-    dh.get_angulat_speed()
+    data = dh.get_anglular_speed()
+    for ele in data:
+        print(ele)
 
 if __name__ == '__main__':
     main()

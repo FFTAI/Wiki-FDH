@@ -2,7 +2,7 @@ import dh
 from dh_logger import logger
 
 def main():
-    pass
+    dh.emergency()
 
 if __name__ == '__main__':
     main()
