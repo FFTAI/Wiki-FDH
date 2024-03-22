@@ -15,7 +15,7 @@ class LogTest(dh_logger.Logger):
                             "{:02d}_{:02d}_{:02d}_{:02d}.{:02d}.{:02d}".format(time.localtime().tm_year, time.localtime().tm_mon,
                                                                                 time.localtime().tm_mday, time.localtime().tm_hour,
                                                                                 time.localtime().tm_min, time.localtime().tm_sec))
-                print(time_now, end=' ')
+                print("[" + time_now + "] ", end=' ')
                 print(*objects, sep=sep, end=end, file=file, flush=flush)
     
     def print_variable(self, *objects, sep=' ', end='\n', file=fd, flush=False):
@@ -279,7 +279,27 @@ def fore_thumb():
     dh.set_target_angle(1, -200)
     time.sleep(1)   
      
+def hold_ball():
+    counts = input("Repeat times: ")
+    for i in range(0, int(counts)):
+        for i in range(2, 7):
+           dh.set_target_angle(int(i), 0) 
+        dh.set_target_angle(1, -200)
+        time.sleep(1)
+        
+        dh.set_target_angle(3, 450)
+        dh.set_target_angle(4, 950)
+        dh.set_target_angle(2, 800)
+        dh.set_target_angle(5, 700)
+        dh.set_target_angle(6, 700)
+        dh.set_target_angle(1, -300)
+        
+        time.sleep(1)
     
+    for i in range(2, 7):
+        dh.set_target_angle(int(i), 0) 
+    dh.set_target_angle(1, -200)
+    time.sleep(1)  
     
    
 switch_dict = {  
@@ -289,7 +309,8 @@ switch_dict = {
     3: angle_controller,
     4: current_controller,
     5: hand_grasp,
-    6: fore_thumb
+    6: fore_thumb,
+    7: hold_ball
 } 
 
 def switch_function(value):  
