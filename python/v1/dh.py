@@ -88,7 +88,7 @@ def emergency():
 
 # 
 def set_target_angle(id, target):
-    tx_messages = struct.pack('>BBBBf', 0x01, 0x02, 0x00, id, float(target))
+    tx_messages = struct.pack('>BBBBf', 0x01, 0x02, 0x00, int(id), float(target))
     s.sendto(tx_messages, (dh_network, dh_port_ctrl))
 
 
@@ -98,7 +98,9 @@ def set_target_omega(id, target):
 
 # 
 def set_target_current(id, target):
-    tx_messages = struct.pack('>BBBBf', 0x01, 0x04, 0x00, id, float(target))
+    if int(id) == 5 or int(id) == 6:
+        target = -float(target)
+    tx_messages = struct.pack('>BBBBf', 0x01, 0x04, 0x00, int(id), float(target))
     s.sendto(tx_messages, (dh_network, dh_port_ctrl))
 
 # 
@@ -362,8 +364,10 @@ def get_ip():
 
     except socket.timeout:  # fail after 1 second of no activity
         logger.print_trace_error(dh_network + " : Didn't receive anymore data! [Timeout]")
+        return " "
     except:
         logger.print_trace_warning(dh_network + " fi_dh.get_root() except")
+        return " "
 
 
 def loop_angle(target1, target2, target3, target4, target5, target6, cur_angle):

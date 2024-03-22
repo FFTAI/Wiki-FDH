@@ -2,8 +2,8 @@ import dh
 from dh_logger import logger
 
 def main():
-    pid = [455, 0.8, 0.4]
-    dh.set_pid_angle(6, pid)
+    pid = [800, 0.8, 0.4]
+    dh.set_pid_angle(1, pid)
 
     pid_p = dh.get_p()
     pid_i = dh.get_i()

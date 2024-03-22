@@ -1,0 +1,13 @@
+2024_03_22_11.50.46 COMMAND-> Connection: 0, Calibration: 1, Fatigue Testing: 2, Agnle Controller: 3, Current Controller: 4, Hand Grasp: 5, Fore Thumb: 6
+Please input command: 0
+[2024.03.22 11:50:53.985.986] [0m Info:   [0m 2024_03_22_11.50.53 Try connect ...
+[2024.03.22 11:50:53.990.792] [0m Info:   [0m 2024_03_22_11.50.53 Hand Connected
+Please input command: 1
+2024_03_22_11.50.59 calibration start
+2024_03_22_11.50.59 It's calibrating ...
+2024_03_22_11.51.12 calibration finished
+Please input command: 2
+Please input cycle times: 2024_03_22_11.51.26 times: 0
+2024_03_22_11.51.28 times: 1
+2024_03_22_11.51.28 Fatigue Testing successfully
+Please input command: 
