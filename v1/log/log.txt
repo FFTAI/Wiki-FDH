@@ -1,0 +1,23 @@
+[2024_05_23_22.01.02]  COMMAND-> Connection: 0, Calibration: 1, Fatigue Testing: 2, Agnle Controller: 3, set_position: 4, backhome: 5, grip: 6
+Please input command: 1
+[2024_05_23_22.01.06]  calibration start
+[2024_05_23_22.01.10]  calibration finished
+Please input command: 1
+[2024_05_23_22.01.18]  calibration start
+[2024_05_23_22.01.22]  calibration finished
+Please input command: 1
+[2024_05_23_22.01.22]  calibration start
+[2024_05_23_22.01.26]  calibration finished
+Please input command: 1
+[2024_05_23_22.04.08]  calibration start
+[2024_05_23_22.04.12]  calibration finished
+Please input command: 1
+[2024_05_23_22.04.20]  calibration start
+[2024_05_23_22.04.24]  calibration finished
+Please input command: 1
+[2024_05_23_22.04.25]  calibration start
+[2024_05_23_22.04.29]  calibration finished
+Please input command: 1
+[2024_05_23_22.04.37]  calibration start
+[2024_05_23_22.04.41]  calibration finished
+Please input command: 

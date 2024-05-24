@@ -2,8 +2,9 @@ import dh
 from dh_logger import logger
 
 def main():
-    dh.debug_motor_stop(0)
-
+    data = dh.get_controltype()
+    for i in data:
+        print(i)
 
 if __name__ == '__main__':
     main()
