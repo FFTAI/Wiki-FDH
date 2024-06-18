@@ -34,7 +34,7 @@ def main():
     #     # dh.set_target_angle(3, 0);
     #     time.sleep(1.5)
         
-    dh.set_target_angle(1, 4);
+    dh.set_target_angle(3, 5);
     # dh.set_target_angle(4, 0);
 
     # dh.set_target_angle(3, 8);

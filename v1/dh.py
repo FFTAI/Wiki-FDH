@@ -1,6 +1,7 @@
 import socket
 import time
 import struct
+import json
 # import numpy as np
 
 from dh_logger import logger
@@ -26,7 +27,7 @@ default_dh_port_ctrl = 2333
 default_dh_port_comm = 2334
 default_dh_port_pt = 10000
 default_dh_port_debug = 8888
-default_dh_network = "192.168.137.19"
+default_dh_network = "192.168.137.39"
 recvfromsize = 1024
 
 dh_timeout = 0
@@ -133,6 +134,10 @@ def set_target_current(id, target):
 def set_pid_angle(id, pid):
     tx_messages = struct.pack('>BBBBfff', 0x01, 0x05, 0x00, id, float(pid[0]), float(pid[1]), float(pid[2]))
     s.sendto(tx_messages, (dh_network, dh_port_ctrl))
+    
+def set_new_angle(id, tar):
+    tx_messages = struct.pack('>BBBBff', 0x01, 0x21, 0x00, id, float(tar[0]), float(tar[1]))
+    s.sendto(tx_messages, (dh_network, dh_port_ctrl))
 
 
 def set_pid_omega(id, pid):
@@ -158,6 +163,20 @@ def set_limit_omega(id, limit):
 def set_limit_current(id, limit):
     tx_messages = struct.pack('>BBBBf', 0x01, 0x0a, 0x00, id, float(limit))
     s.sendto(tx_messages, (dh_network, dh_port_ctrl))
+
+def broadcast():
+    s.sendto(str.encode("broadcast"), (dh_network, dh_port_comm))
+    try:
+        data, address = s.recvfrom(recvfromsize)
+        logger.print_trace("Received from {}:{}".format(address, data.decode("utf-8")))
+        if data:
+            json_obj = json.loads(data.decode("utf-8"))
+            print(json_obj.get("type"))
+
+    except socket.timeout:  # fail after 1 second of no activity
+        logger.print_trace_error(dh_network + " : Didn't receive anymore data! [Timeout]")
+    except:
+        logger.print_trace_warning(dh_network + " fi_dh.get_root() except")
     
 # 
 def get_cnt():
