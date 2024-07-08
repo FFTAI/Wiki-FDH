@@ -1,3 +1,9 @@
+/**
+ *  2024.7.4
+ * Gedit by fourier intelligent
+ *
+ */
+
 #include <sstream>
 #include "../include/Handapi.h"
 #include "../include/HandapiFunctionResult.h"
@@ -1298,8 +1304,8 @@ int Handapi::set_current_limited(uint8_t id, float max_current)
 {
     int ret;
     std::vector<uint8_t> send_data;
-    send_data.push_back(0);
-    send_data.push_back(0x09);
+    send_data.push_back(0x01);
+    send_data.push_back(0x0a);
     send_data.push_back(0);
     send_data.push_back(id);
     unsigned int temp = *(unsigned int *)&max_current;
@@ -1426,7 +1432,7 @@ int Handapi::set_velocity_pid(uint8_t id, std::vector<float> _pid)
     int ret;
     std::vector<uint8_t> send_data;
     send_data.push_back(0x01);
-    send_data.push_back(0x05);
+    send_data.push_back(0x06);
     send_data.push_back(0);
     send_data.push_back(id);
     for (int i = 0; i < _pid.size(); i++)
@@ -1492,7 +1498,7 @@ int Handapi::set_current_pid(uint8_t id, std::vector<float> _pid)
     int ret;
     std::vector<uint8_t> send_data;
     send_data.push_back(0x01);
-    send_data.push_back(0x05);
+    send_data.push_back(0x07);
     send_data.push_back(0);
     send_data.push_back(id);
     for (int i = 0; i < _pid.size(); i++)
@@ -1757,7 +1763,7 @@ int Handapi::set_velocity(uint8_t id, float speed)
     int ret;
     std::vector<uint8_t> send_data;
     send_data.push_back(0x01);
-    send_data.push_back(0x02);
+    send_data.push_back(0x03);
     send_data.push_back(0x00);
     send_data.push_back(id);
     unsigned int temp = *(unsigned int *)&speed;

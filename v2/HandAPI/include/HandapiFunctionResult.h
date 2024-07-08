@@ -1,3 +1,9 @@
+/**
+ *  2024.7.4
+ * Gedit by fourier intelligent
+ *
+ */
+
 namespace HandProtocol
 {
     namespace APIResultCode

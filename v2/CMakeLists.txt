@@ -7,5 +7,5 @@ set(CMAKE_CXX_STANDARD 11)
 
 set(CMAKE_CXX_STANDARD_REQUIRED True)  
 
-add_subdirectory(HandSocket build/socket)
-add_subdirectory(HandAPI build/api)
+add_subdirectory(Demo build/demo)
+

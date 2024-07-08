@@ -1,3 +1,9 @@
+/**
+ *  2024.7.4
+ * Gedit by fourier intelligent
+ *
+ */
+
 #pragma once
 
 #include <arpa/inet.h>
@@ -12,8 +18,16 @@
 
 namespace HandSocket
 {
+/**
+ * @brief namespace for transmit
+ */
+
     namespace Transmit
     {
+    /**
+     * @brief udp socket send and receive, use udp port 2333 and 2334, control: 2333, feedback: 2334
+     */
+
         class UDPSocket
         {
         public:

@@ -1,7 +1,17 @@
+/**
+ *  2024.7.4
+ * Gedit by fourier intelligent
+ *
+ */
+
 #pragma once
 
 namespace HandSocket
 {
+/**
+ * @brief this namespace for enum of motor result, include result and error, every function will return result code, please find code here
+ */
+
     namespace ResultCode
     {
         enum FunctionResult
