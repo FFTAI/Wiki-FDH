@@ -1,87 +1,19 @@
-# Wiki-Fdh-python
+# WiKi-FDH (Python)
+## Introduction
 
-傅利叶自研究灵巧手python接口与使用说明. VERSION : "0.0.0.9"
+Designed for dexterous hand debugging and secondary development, WiKi-FDH includes two versions: v1 and v2.
+## v1
 
+Provides customized demos for each control protocol.
+## v2
 
-### 文件目录说明
+Secondary development library.
 
-```bash
-|-- Wiki-Fdh-python
-    |-- Handapi.py          # 手部控制API库 直接对接灵巧手驱动协议
-    |-- HandSocket.py       # 手部通信API库 udp通信定义
-    |-- demo.py             # 示例运行 
-    |-- dh_logger.py        # 
-    |-- README.md           # 英文 Readme
-    |-- README.CN.md        # 中文 Readme
-```
+## Details
+The main purpose of WiKi-FDH is to facilitate the process of debugging and enhancing the functionality of dexterous hands through software development. The two versions cater to different needs and skill levels of users.
 
-## 安装要求
+    v1 is geared towards users who are looking for quick demonstrations and examples on how to use the various control protocols with a dexterous hand. It provides ready-to-run code snippets and demos that showcase the basic functionalities of the system. This version is ideal for beginners who want to get a hands-on experience with the hardware and software without delving too deep into the intricacies of programming.
 
-- Python 3.8
-- Socket
+    v2 is designed for more advanced users who wish to extend the capabilities of the dexterous hand through custom development. The secondary development library in v2 offers a set of tools, functions, and APIs that can be leveraged to create new control algorithms, interfaces, or applications. This version allows users to dive deeper into the system and customize it to their specific needs, enabling the creation of innovative solutions and enhancements.
 
-
-### 通信及网络配置
-- 使用网线将计算机与 FDH 连接，并将对应的网络设置为静态 IP 192.168.137.xxx.
-- 在代码中设置手的IP地址:
-```
-Right hand : 192.168.137.19
-Left hand  : 192.168.137.39 
-```
-
-### 示例 
-运行示例脚本，控制手自校准、归零以及不同控制模式下的灵巧手运动.
-```
-python demo.py
-```
-
-
-### 用户指南
-该仓库提供了从灵巧手端获取信息功能以及发送参数完成指定任务的功能及接口开发，包含直接对接灵巧手驱动协议开发以及udp通信定义。
-
-- ##### 获取手信息
-- ###### 手ip地址: 192.168.137.xxx  发送端口号: 2334
-
-    发送特定指令从灵巧手获取传感器参数:
-        - 手指顺序： [ 食指，中指，无名指，小指，大拇指，大拇指-侧摆 ]
-    ```
-    发送: 0x01　　// 获取编码器计数脉冲     
-    发送: 0x02　　// 获取当前丝杠移动距离                  
-    发送: 0x03　　// 获取当前丝杠移动速度                   
-    发送: 0x04　　// 获取当前电机电流                     
-    发送: 0x05　　// 获取当前电机错误码              
-                 // １:校准之后的状态, 2:运行结束的状态, 3:运行中, 4:错误
-    发送: 0x06　　// 获取当前电机错误码                  
-    发送: 0x08　　// 获取位置环pid参数         
-    发送: 0x09　　// 获取速度环pid参数        
-    发送: 0x0a　　// 获取电流环pid参数         
-    发送: 0x0b　　// 获取位置限制范围　   
-    发送: 0x0c　　// 获取最大速度限制　　   
-    发送: 0x0d　　// 获取最大电流限制    
-    发送: 0x0e　　// 获取当前软件版本                  
-    发送: 0x0f　　// 获取灵巧手ip　　                  
-    ```
-- ##### 设置手参数
-- ###### 手ip地址: 192.168.137.xxx  发送端口号: 2333
-    设置手参数，包括不同控制方式，可完成单独控制手指及控制所有手指
-
-    ```
-    发送: 0x01 0x01 // 校准                                 
-    发送: 0x01 0x0b // 急停      
-
-    ## 单独手指                                
-    发送: 0x01 0x02 0x00 id data // 设置丝杠目标移动距离       | 范围 : [低: 0.0 - 高: 12.0]                   
-    发送: 0x01 0x04 0x00 id data // 设置丝杠目标移动速度       | 范围 : [低: 0 - 高: 10000.0]                  
-    发送: 0x01 0x04 0x00 id data // 设置丝杠目标电流          | 范围 : [低: 0.0 - 高: 1000.0]               
-    发送: 0x01 0x05 0x00 id data_p data_i data_d // 设置位置环pid                   
-    发送: 0x01 0x06 0x00 id data_p data_i data_d // 设置速度环pid         
-    发送: 0x01 0x07 0x00 id data_p data_i data_d // 设置电流环pid      
-    发送: 0x01 0x08 0x00 id data_start data_end  // 设置位置限制          
-    发送: 0x00 0x09 0x00 id data // 设置速度最大限制　    
-    发送: 0x01 0x0a 0x00 id data // 设置电流最大限制　    
-    发送: 0x01 0x21 0x00 id data omega　　// 设置pd丝杠目标移动       
-    
-    ## 所有手指
-    发送: 0x01 0x11 0x00 0x00 pos1 pos2 pos3 pos4 pos5 pos6 // 设置位置      | 范围 : [low: 0.0 - high: 12.0]                   
-    发送: 0x01 0x14 0x00 0x00 pos1 pos2 pos3 pos4 pos5 pos6 // 设置pwm控制   | 范围 : [low: -200 - high: 200]　                  
-    ```
+Overall, WiKi-FDH (Python) is a powerful toolset that can help researchers, developers, and enthusiasts in the field of robotics and automation to work more efficiently with dexterous hands.
