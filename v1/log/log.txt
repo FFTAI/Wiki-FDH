@@ -1,5 +1,0 @@
-COMMAND-> Connection: 0, Calibration: 1, Fatigue Testing: 2, Agnle Controller: 3, set_position: 4, backhome: 5, grip: 6
-Please input command: 1
-calibration start
-calibration finished
-Please input command: 

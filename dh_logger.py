@@ -1,3 +1,9 @@
+"""
+Copyright (C) [2024] [Fourier Intelligence Ltd.]
+2024.7.4
+Gedit by fourier intelligent
+"""
+
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 import time
@@ -24,7 +30,6 @@ class Logger:
         if enable_log_file:
             self.__init_log()
 
-    # 初始化log文件
     def __init_log(self):
 
         LOG_FORMAT = "%(asctime)s.%(msecs)03d - %(levelname)s - %(message)s"
@@ -32,7 +37,7 @@ class Logger:
         # INFO DEBUG WARNING ERROR CRITICAL
         LOG_LEVEL = logging.INFO
 
-        project_path = os.path.dirname(os.path.abspath(__file__))  # 获取当前文件路径的上一级目录
+        project_path = os.path.dirname(os.path.abspath(__file__))  # 
         exe_file_path = project_path
         print(exe_file_path)
 
@@ -82,7 +87,6 @@ class Logger:
     def print_log_file_critical(self, str_temp):
         logging.log(logging.CRITICAL, str_temp)
 
-    # 设置时间戳最小单位
     # unit='us' 'ms' 's'
     def __time(self, unit='us'):
         if unit == 'ms' or unit == 'us':
@@ -115,15 +119,7 @@ class Logger:
         if self.state == Logger.STATE_ON:
             print(*objects, sep=sep, end=end, file=file, flush=flush)
 
-    # 设置控制台显示颜色
-    # 显示方式: 0（默认值）、1（高亮）、22（非粗体）、4（下划线）、24（非下划线）、 5（闪烁）、25（非闪烁）、7（反显）、27（非反显）
-    # 前景色: 30（黑色）、31（红色）、32（绿色）、 33（黄色）、34（蓝色）、35（洋 红）、36（青色）、37（白色）
-    # 背景色: 40（黑色）、41（红色）、42（绿色）、 43（黄色）、44（蓝色）、45（洋 红）、46（青色）、47（白色）
-    # 常见开头格式：
-    # \033[0m            默认字体正常显示，不高亮
-    # \033[0;31m       红色字体正常显示
-    # \033[1;32;40m  显示方式: 高亮    字体前景色：绿色  背景色：黑色
-    # \033[0;31;46m  显示方式: 正常    字体前景色：红色  背景色：青色
+
     def print_trace(self, *objects, sep=' ', end='\n', file=sys.stdout, flush=False):
         if self.state == Logger.STATE_ON:
             if self.level <= Logger.LEVEL_TRANCE:
