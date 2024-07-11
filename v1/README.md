@@ -32,7 +32,9 @@ Left hand  : 192.168.137.39
 ### Demo 
 This demo provides the example for dexterous hand reset, calibration and set position.
 ```
-python demo.py
+python demo_user.py
+or 
+python demo_*.py
 ```
 
 

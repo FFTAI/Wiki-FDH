@@ -32,7 +32,9 @@ Left hand  : 192.168.137.39
 ### 示例 
 运行示例脚本，控制手自校准、归零以及不同控制模式下的灵巧手运动.
 ```
-python demo.py
+python demo_user.py
+or 
+python demo_*.py
 ```
 
 
