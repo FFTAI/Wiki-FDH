@@ -5,16 +5,18 @@ This repository provides a guidance for Fourier Dexterous Hand install and contr
 
 ### Directory Structure
 
+
 ```bash
 |-- Wiki-Fdh-python
-    |-- Handapi.py          # HandAPI function
-    |-- HandSocket.py       # Hand Socket communication function
-    |-- demo.py             # demo 
-    |-- dh_logger.py        # logger config
+    |-- Hand_Sdk
+        |-- Handapi.py          # HandAPI function
+        |-- HandSocket.py       # Hand Socket communication function
+        |-- dh_logger.py        # logger config
+    |-- Demo
+        |-- demo_*.py             # demo 
     |-- README.md           # English Readme
     |-- README.CN.md        # Chinese Readme
 ```
-
 ## Requirements
 
 - Python 3.8
@@ -32,6 +34,7 @@ Left hand  : 192.168.137.39
 ### Demo 
 This demo provides the example for dexterous hand reset, calibration and set position.
 ```
+cd Demo/
 python demo_user.py
 or 
 python demo_*.py

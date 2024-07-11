@@ -7,10 +7,12 @@
 
 ```bash
 |-- Wiki-Fdh-python
-    |-- Handapi.py          # 手部控制API库 直接对接灵巧手驱动协议
-    |-- HandSocket.py       # 手部通信API库 udp通信定义
-    |-- demo.py             # 示例运行 
-    |-- dh_logger.py        # 
+    |-- Hand_Sdk
+        |-- Handapi.py          # 手部控制API库 直接对接灵巧手驱动协议
+        |-- HandSocket.py       # 手部通信API库 udp通信定义
+        |-- dh_logger.py        # 
+    |-- Demo
+        |-- demo_*.py             # 示例运行 
     |-- README.md           # 英文 Readme
     |-- README.CN.md        # 中文 Readme
 ```
@@ -32,6 +34,7 @@ Left hand  : 192.168.137.39
 ### 示例 
 运行示例脚本，控制手自校准、归零以及不同控制模式下的灵巧手运动.
 ```
+cd Demo/
 python demo_user.py
 or 
 python demo_*.py
